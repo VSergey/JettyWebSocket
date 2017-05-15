@@ -4,11 +4,8 @@ import java.io.IOException;
 import java.util.*;
 
 import org.eclipse.jetty.websocket.api.Session;
-import org.eclipse.jetty.websocket.api.annotations.OnWebSocketClose;
-import org.eclipse.jetty.websocket.api.annotations.OnWebSocketConnect;
-import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage;
-import org.eclipse.jetty.websocket.api.annotations.WebSocket;
- 
+import org.eclipse.jetty.websocket.api.annotations.*;
+
 @WebSocket
 public class MySocket {
     private static final String s_login = "login by name::";
@@ -49,6 +46,23 @@ public class MySocket {
         }
     }
 
+    @OnWebSocketMessage
+    public void onBinary(byte buf[], int offset, int length) {
+        // TODO
+    }
+
+    @OnWebSocketClose
+    public void onClose(int p_statusCode, String p_reason) {
+        o_users.remove(o_user);
+        sendForAll(o_user, o_user + " was disconnected");
+        log(o_user + " Close connection: statusCode=" + p_statusCode + ", reason=" + p_reason);
+    }
+
+    @OnWebSocketError
+    public void onError(Throwable error) {
+        error.printStackTrace();
+    }
+
     private void sendForAll(String p_user, String p_message) {
         //send for all users message
         for(Map.Entry<String,Session> entry : o_users.entrySet()) {
@@ -66,13 +80,6 @@ public class MySocket {
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
-
-    @OnWebSocketClose
-    public void onClose(int p_statusCode, String p_reason) {
-        o_users.remove(o_user);
-        sendForAll(o_user, o_user + " was disconnected");
-        log(o_user + " Close connection: statusCode=" + p_statusCode + ", reason=" + p_reason);
     }
 
     private void log(String p_msg) {
