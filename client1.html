@@ -1,0 +1,35 @@
+<html>
+    <head>
+        <meta charset=UTF-8>
+        <title>Tomcat WebSocket Chat (Kate)</title>
+        <script>
+		    var name = "Kate";
+            var ws = new WebSocket("ws://localhost:8080");
+            ws.onopen = function() {
+			    //alert("Connection is opened...");
+				ws.send("login by name::"+name);
+            };
+			ws.onclose = function() {
+                // websocket is closed.
+                //alert("Connection is closed...");
+            };
+            ws.onmessage = function(message){
+                document.getElementById("chatlog").textContent += message.data + "\n";
+            };
+            function postToServer(){
+			    var control = document.getElementById("msg")
+                ws.send(name+"##"+control.value);
+                control.value = "";
+           }
+            function closeConnect(){
+                ws.close();
+            }
+        </script>
+    </head>
+    <body>
+        <textarea id="chatlog" readonly style="width:500px; height:400px"></textarea><br/>
+        <input id="msg" type="text" onkeydown="if(event.keyCode == 13) postToServer()"/>
+        <button type="submit" id="sendButton" onClick="postToServer()">Send!</button>
+        <button type="submit" id="sendButton" onClick="closeConnect()">End</button>
+    </body>
+</html>
