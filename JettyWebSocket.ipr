@@ -6,6 +6,13 @@
     <option name="numChars" value="15" />
     <option name="caseSensitive" value="false" />
   </component>
+  <component name="CheckStyle-IDEA">
+    <option name="configuration">
+      <map>
+        <entry key="scan-before-checkin" value="false" />
+      </map>
+    </option>
+  </component>
   <component name="CompilerConfiguration">
     <annotationProcessing>
       <profile name="Maven default annotation processors profile" enabled="true">
